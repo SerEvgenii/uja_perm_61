@@ -9,16 +9,15 @@ from src.auth_user.domain.authorization import ModelUser, encode_base64, Passwor
 
 class ViewTestCase(APITestCase):
     def test_registration(self):
-        url = reverse('Account')
         data = {
             'first_name': 'firstname1',
             'last_name': 'lastname1',
             'patronymic': 'patronymic1',
-            'email': 'email1',
+            'email': 'email1@mail.ru',
             'login': 'login1',
             'password': 'password1',
         }
-        response = self.client.post(url, data)
+        response = self.client.post('/api/v1/account/', data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(User.objects.get().login, 'login1')
 
@@ -34,13 +33,11 @@ class ViewTestCase(APITestCase):
         repository = DjangoORMRepository()
         repository.add(model_user)
 
-        url = reverse('Security Token')
-
         data_base64 = encode_base64('login1:password1')
 
         client = APIClient()
         client.credentials(HTTP_AUTHORIZATION=data_base64)
-        response = client.get(url)
+        response = client.get('/api/v1/security/token/')
         response_data = response.json()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIsInstance(response_data, dict)

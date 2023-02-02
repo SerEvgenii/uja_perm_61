@@ -28,4 +28,6 @@ class SecurityToken(APIView):
         serializer = AuthorizationSerializer(data=request.headers)
         serializer.is_valid(raise_exception=True)
         token = authorization(DjangoORMRepository(), serializer.validated_data["Authorization"])
-        return Response(data={"access_token": token}, status=HTTP_200_OK)
+        response = Response()
+        response.set_cookie(key="refresh_token", value=token.pop("refresh_token"), httponly=True)
+        return Response(data=token, status=HTTP_200_OK)
