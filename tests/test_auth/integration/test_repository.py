@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from src.auth_user.adapters.repository import DjangoORMRepository
-from src.auth_user.domain.authorization import ModelUser
+from src.auth_user.domain.auth import ModelUser
 from src.core.models.user import User
 
 

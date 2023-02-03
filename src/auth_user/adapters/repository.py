@@ -1,7 +1,7 @@
 from typing import Optional
 import abc
 
-from src.auth_user.domain.authorization import ModelUser, Password
+from src.auth_user.domain.auth import ModelUser
 from src.core.models import User
 
 

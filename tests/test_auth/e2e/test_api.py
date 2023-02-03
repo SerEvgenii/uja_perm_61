@@ -1,10 +1,10 @@
-from django.urls import reverse
-from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
+from rest_framework import status
 
 from src.auth_user.adapters.repository import DjangoORMRepository
 from src.core.models import User
-from src.auth_user.domain.authorization import ModelUser, encode_base64, Password
+from src.auth_user.domain.model_user import ModelUser
+from src.auth_user.domain.utils import hashing, encode_base64
 
 
 class ViewTestCase(APITestCase):
@@ -28,7 +28,7 @@ class ViewTestCase(APITestCase):
             patronymic='patronymic1',
             email='email1',
             login='login1',
-            password=Password('password1')
+            password=hashing('password1')
         )
         repository = DjangoORMRepository()
         repository.add(model_user)
@@ -37,12 +37,10 @@ class ViewTestCase(APITestCase):
 
         client = APIClient()
         client.credentials(HTTP_AUTHORIZATION=data_base64)
-        response = client.get('/api/v1/security/token/')
+        response = client.get('/api/v1/security/')
         response_data = response.json()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIsInstance(response_data, dict)
-
-
 
 
 

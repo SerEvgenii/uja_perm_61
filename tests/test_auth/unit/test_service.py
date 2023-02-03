@@ -1,12 +1,15 @@
+from datetime import datetime
 from typing import Optional, List
 
 from django.db import IntegrityError
 from django.test import TestCase
 
 from src.auth_user.adapters.repository import AbstractRepository
-from src.auth_user.domain.authorization import ModelUser, encode_base64, Password
-from src.auth_user.service_layer.service import registration, authorization, UserExists, InvalidSecurityData, \
-    InvalidPassword, authentication
+from src.auth_user.common.exceptions import UserAlreadyExists, InvalidSecurityData
+from src.auth_user.domain.model_user import ModelUser
+from src.auth_user.domain.token import JWTToken
+from src.auth_user.domain.utils import hashing, encode_base64
+from src.auth_user.service_layer.service import registration, authorization_, change_password
 
 
 class FakeRepository(AbstractRepository):
@@ -46,7 +49,7 @@ class ServiceTestCase(TestCase):
             patronymic='patronymic1',
             email='email1',
             login='login1',
-            password=Password('password1')
+            password=hashing('password1')
         )
 
     @classmethod
@@ -77,15 +80,10 @@ class ServiceTestCase(TestCase):
 
     def test_authorization(self):
         security_data = encode_base64('login1:password1')
-        token = authorization(FakeRepository([self.model_user]), security_data)
+        token = authorization_(FakeRepository([self.model_user]), security_data)
         self.assertIsInstance(token, dict)
 
-    def test_authentication(self):
-        token = 'ZXlkaGJHY25PaUFuU0ZNeU5UWW5MQ0FuZEhsd0p6b2dKMHBYVkNkOS5leWR6ZFdJbk9pQW5iRzluYVc0eEp5d2dKMmxoZENjNklDY3lNREl6TFRBeUxUQXhJREE1T2pRek9qUXpMakUzTURZeE5DZDkuOGU0MmM5ZGVkNDM4YmM1YWY5ZTFlYTc5OWE3ZWNmZjgyODg3NTE0MTZkZDYyYmZlY2UxYTliOWQ1YmRlNzc2OQ=='
-        user = authentication(FakeRepository([self.model_user]), token)
-        self.assertEqual(user, self.model_user)
-
-    def test_user_exists_exception(self):
+    def test_user_already_exists_exception(self):
         data = [
             'firstname1',
             'lastname1',
@@ -94,16 +92,16 @@ class ServiceTestCase(TestCase):
             'login1',
             'password1'
         ]
-        self.assertRaises(UserExists, registration, FakeRepository([self.model_user]), *data)
+        self.assertRaises(UserAlreadyExists, registration, FakeRepository([self.model_user]), *data)
 
     def test_invalid_security_data_exception(self):
         security_data = encode_base64('login1password1')
-        self.assertRaises(InvalidSecurityData, authorization, FakeRepository([self.model_user]), security_data)
+        self.assertRaises(InvalidSecurityData, authorization_, FakeRepository([self.model_user]), security_data)
 
     def test_user_not_found_exception(self):
         security_data = encode_base64('login2:password1')
-        self.assertRaises(InvalidSecurityData, authorization, FakeRepository([self.model_user]), security_data)
+        self.assertRaises(InvalidSecurityData, authorization_, FakeRepository([self.model_user]), security_data)
 
-    def test_invalid_password_exception(self):
-        security_data = encode_base64('login1:password2')
-        self.assertRaises(InvalidPassword, authorization, FakeRepository([self.model_user]), security_data)
+    def test_change_password(self):
+        change_password(FakeRepository([self.model_user]), self.model_user.login, "password2")
+        self.assertEqual(self.model_user.password, hashing("password2"))
