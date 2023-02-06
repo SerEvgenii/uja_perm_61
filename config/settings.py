@@ -19,8 +19,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'rest_framework',
+
     'src.core',
     'src.auth_user',
+    'src.beauty_saloon',
 ]
 
 # MIGRATION_MODULES = {'auth_user': 'src.auth_user.adapters.orm.migrations'}

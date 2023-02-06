@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import Optional, List
 
 from django.db import IntegrityError
@@ -7,7 +6,6 @@ from django.test import TestCase
 from src.auth_user.adapters.repository import AbstractRepository
 from src.auth_user.common.exceptions import UserAlreadyExists, InvalidSecurityData
 from src.auth_user.domain.model_user import ModelUser
-from src.auth_user.domain.token import JWTToken
 from src.auth_user.domain.utils import hashing, encode_base64
 from src.auth_user.service_layer.service import registration, authorization_, change_password
 
