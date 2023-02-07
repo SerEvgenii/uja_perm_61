@@ -1,0 +1,42 @@
+[
+    {
+        "model": "core.service",
+        "pk": 1,
+        "fields": {
+            "name": "Педикюр",
+            "price": 1200
+        }
+    },
+    {
+        "model": "core.service",
+        "pk": 2,
+        "fields": {
+            "name": "Маникюр",
+            "price": 1100
+        }
+    },
+    {
+        "model": "core.service",
+        "pk": 3,
+        "fields": {
+            "name": "Депиляция",
+            "price": 550
+        }
+    },
+    {
+        "model": "core.service",
+        "pk": 4,
+        "fields": {
+            "name": "Массаж",
+            "price": 1900
+        }
+    },
+    {
+        "model": "core.service",
+        "pk": 5,
+        "fields": {
+            "name": "Пилинг",
+            "price": 2200
+        }
+    }
+]

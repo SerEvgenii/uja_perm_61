@@ -1,40 +1,68 @@
-from rest_framework.test import APITestCase
+from django.test import TestCase
 
-from src.core.models import User, UserCategory, DistributionUsersByCategory
+from rest_framework.test import APIClient
 
 
-class ViewTestCase(APITestCase):
-    fixtures = ['user.json', 'user_category.json', 'user_by_category.json']
-    # @classmethod
-    # def setUpTestData(cls):
-    #     user = User.objects.create(
-    #         first_name="Сергей",
-    #         last_name="Сергеев",
-    #         patronymic="Сергеевич",
-    #         email="sergeev@mail.ru",
-    #         login="sergeev",
-    #         password="4321"
-    #     )
-    #     cat = UserCategory.objects.create(name="Клиент")
-    #     DistributionUsersByCategory.objects.create(id_user=user, id_user_category=cat)
-    #
-    # def tearDown(self) -> None:
-    #     pass
+class ViewTestCase(TestCase):
+    client_class = APIClient
+    fixtures = [
+        'user.json',
+        'user_category.json',
+        'users_by_category.json',
+        'service.json',
+        'material.json',
+        'order.json',
+        'materials_by_order.json',
+    ]
 
     def test_distribution_users_by_category(self):
         response = self.client.get("/api/v1/salon/roles/")
+        self.assertEqual(response.status_code, 200)
+
+    def test_service(self):
+        response = self.client.get("/api/v1/salon/services/")
+        self.assertEqual(response.status_code, 200)
+
+    def test_material(self):
+        response = self.client.get("/api/v1/salon/materials/")
+        self.assertEqual(response.status_code, 200)
+
+    def test_create_order(self):
+        data = {
+            "id_employee": "2",
+            "id_client": "1",
+            "id_service": "2",
+            "materials_by_order": [
+                {
+                    "id_material": "2",
+                    "quantity": "2"
+                },
+                {
+                    "id_material": "3",
+                    "quantity": "2"
+                },
+            ]
+        }
+        response = self.client.post("/api/v1/salon/order/", data=data, format='json')
+        response_data = response.json()
+        self.assertEqual(response_data["profit"], 1030)
+
+    def test_update_order(self):
+        data = {
+            "id_employee": "2",
+            "id_client": "1",
+            "id_service": "1",
+            "materials_by_order": [
+                {
+                    "id_material": "2",
+                    "quantity": "3"
+                },
+                {
+                    "id_material": "3",
+                    "quantity": "2"
+                },
+            ]
+        }
+        response = self.client.put("/api/v1/salon/order/1/", data=data, format='json')
         response_data = response.json()
         print(response_data)
-        print(response)
-
-    # def test_service(self):
-    #     response = self.client.get("/api/v1/salon/services/")
-    #     response_data = response.json()
-    #     print(response_data)
-    #     print(response)
-    #
-    # def test_material(self):
-    #     response = self.client.get("/api/v1/salon/materials/")
-    #     response_data = response.json()
-    #     print(response_data)
-    #     print(response)

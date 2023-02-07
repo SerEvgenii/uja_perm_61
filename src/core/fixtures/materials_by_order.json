@@ -1,0 +1,20 @@
+[
+    {
+        "model": "core.materialsbyorder",
+        "pk": 1,
+        "fields": {
+            "id_order": "1",
+            "id_material": "2",
+            "quantity": "3"
+        }
+    },
+    {
+        "model": "core.materialsbyorder",
+        "pk": 2,
+        "fields": {
+            "id_order": "1",
+            "id_material": "3",
+            "quantity": "2"
+        }
+    }
+]

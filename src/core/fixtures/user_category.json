@@ -1,0 +1,30 @@
+[
+    {
+        "model": "core.usercategory",
+        "pk": 1,
+        "fields": {
+            "name": "Администратор"
+        }
+    },
+    {
+        "model": "core.usercategory",
+        "pk": 2,
+        "fields": {
+            "name": "Модератор"
+        }
+    },
+    {
+        "model": "core.usercategory",
+        "pk": 3,
+        "fields": {
+            "name": "Сотрудник"
+        }
+    },
+    {
+        "model": "core.usercategory",
+        "pk": 4,
+        "fields": {
+            "name": "Клиент"
+        }
+    }
+]

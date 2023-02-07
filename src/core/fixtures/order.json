@@ -1,0 +1,13 @@
+[
+    {
+        "model": "core.order",
+        "pk": 1,
+        "fields": {
+            "id_employee": "1",
+            "id_client": "2",
+            "id_service": "1",
+            "time_input": "2023-02-07 12:50:39.776132+00:00",
+            "profit": "1030"
+        }
+    }
+]

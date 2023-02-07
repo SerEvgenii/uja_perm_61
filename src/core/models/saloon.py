@@ -28,7 +28,7 @@ class Order(Model):
     id_client = models.OneToOneField(to=User, related_name='client', on_delete=models.PROTECT)
     id_service = models.OneToOneField(to=Service, on_delete=models.PROTECT)
     time_input = models.DateTimeField(auto_now=True)
-    profit = models.IntegerField()
+    profit = models.IntegerField(default=0)
 
 
 class MaterialsByOrder(Model):

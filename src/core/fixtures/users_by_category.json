@@ -1,0 +1,42 @@
+[
+    {
+        "model": "core.distributionusersbycategory",
+        "pk": 1,
+        "fields": {
+            "id_user": 1,
+            "id_user_category": 4
+        }
+    },
+    {
+        "model": "core.distributionusersbycategory",
+        "pk": 2,
+        "fields": {
+            "id_user": 2,
+            "id_user_category": 3
+        }
+    },
+    {
+        "model": "core.distributionusersbycategory",
+        "pk": 3,
+        "fields": {
+            "id_user": 3,
+            "id_user_category": 2
+        }
+    },
+    {
+        "model": "core.distributionusersbycategory",
+        "pk": 4,
+        "fields": {
+            "id_user": 3,
+            "id_user_category": 1
+        }
+    },
+    {
+        "model": "core.distributionusersbycategory",
+        "pk": 5,
+        "fields": {
+            "id_user": 4,
+            "id_user_category": 1
+        }
+    }
+]

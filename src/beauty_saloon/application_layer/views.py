@@ -1,13 +1,8 @@
 from rest_framework.viewsets import ModelViewSet
 
-from src.core.models import DistributionUsersByCategory, Service, Material, User
-from src.beauty_saloon.application_layer.serializers import DistributionUsersByCategorySerializer, \
-    ServiceSerializer, MaterialSerializer, UserSerializers
-
-
-class UserView(ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializers
+from src.core.models import DistributionUsersByCategory, Service, Material, Order
+from src.beauty_saloon.domain_layer.serializers import DistributionUsersByCategorySerializer, \
+    ServiceSerializer, MaterialSerializer, OrderSerializer
 
 
 class DistributionUsersByCategoryView(ModelViewSet):
@@ -23,3 +18,8 @@ class ServiceView(ModelViewSet):
 class MaterialView(ModelViewSet):
     queryset = Material.objects.all()
     serializer_class = MaterialSerializer
+
+
+class OrderView(ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer

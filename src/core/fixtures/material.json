@@ -1,0 +1,66 @@
+[
+    {
+        "model": "core.material",
+        "pk": 1,
+        "fields": {
+            "name": "Лак",
+            "price": 230
+        }
+    },
+    {
+        "model": "core.material",
+        "pk": 2,
+        "fields": {
+            "name": "Салфетки",
+            "price": 20
+        }
+    },
+    {
+        "model": "core.material",
+        "pk": 3,
+        "fields": {
+            "name": "Перчатки",
+            "price": 15
+        }
+    },
+    {
+        "model": "core.material",
+        "pk": 4,
+        "fields": {
+            "name": "Пилка маникюрная",
+            "price": 35
+        }
+    },
+    {
+        "model": "core.material",
+        "pk": 5,
+        "fields": {
+            "name": "Тапочки",
+            "price": 40
+        }
+    },
+    {
+        "model": "core.material",
+        "pk": 6,
+        "fields": {
+            "name": "Крем",
+            "price": 300
+        }
+    },
+    {
+        "model": "core.material",
+        "pk": 7,
+        "fields": {
+            "name": "Эфирное масло",
+            "price": 130
+        }
+    },
+    {
+        "model": "core.material",
+        "pk": 8,
+        "fields": {
+            "name": "Воск",
+            "price": 320
+        }
+    }
+]
