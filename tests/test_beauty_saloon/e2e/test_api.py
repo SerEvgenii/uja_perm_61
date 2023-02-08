@@ -2,6 +2,8 @@ from django.test import TestCase
 
 from rest_framework.test import APIClient
 
+from src.core.models import MaterialsByOrder, Order
+
 
 class ViewTestCase(TestCase):
     client_class = APIClient
@@ -29,7 +31,7 @@ class ViewTestCase(TestCase):
 
     def test_create_order(self):
         data = {
-            "id_employee": "2",
+            "id_employee": "1",
             "id_client": "1",
             "id_service": "2",
             "materials_by_order": [
@@ -41,6 +43,10 @@ class ViewTestCase(TestCase):
                     "id_material": "3",
                     "quantity": "2"
                 },
+                {
+                    "id_material": "3",
+                    "quantity": "2"
+                }
             ]
         }
         response = self.client.post("/api/v1/salon/order/", data=data, format='json')
@@ -51,18 +57,28 @@ class ViewTestCase(TestCase):
         data = {
             "id_employee": "2",
             "id_client": "1",
-            "id_service": "1",
+            "id_service": "4",
             "materials_by_order": [
                 {
-                    "id_material": "2",
+                    "id_material": "1",
                     "quantity": "3"
                 },
                 {
-                    "id_material": "3",
+                    "id_material": "4",
                     "quantity": "2"
                 },
+                {
+                    "id_material": "2",
+                    "quantity": "4"
+                },
+                {
+                    "id_material": "2",
+                    "quantity": "2"
+                }
             ]
         }
-        response = self.client.put("/api/v1/salon/order/1/", data=data, format='json')
+        response = self.client.post("/api/v1/salon/order/1/", data=data, format='json')
         response_data = response.json()
-        print(response_data)
+        self.assertEqual(response_data["profit"], 1060)
+
+

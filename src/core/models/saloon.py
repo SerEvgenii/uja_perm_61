@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import Model
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 from src.core.models import User
 
@@ -24,11 +25,11 @@ class Order(Model):
     class Meta:
         db_table = "order"
 
-    id_employee = models.OneToOneField(to=User, related_name='employee', on_delete=models.PROTECT)
-    id_client = models.OneToOneField(to=User, related_name='client', on_delete=models.PROTECT)
-    id_service = models.OneToOneField(to=Service, on_delete=models.PROTECT)
-    time_input = models.DateTimeField(auto_now=True)
-    profit = models.IntegerField(default=0)
+    id_employee = models.ForeignKey(to=User, related_name='employee', on_delete=models.PROTECT)
+    id_client = models.ForeignKey(to=User, related_name='client', on_delete=models.PROTECT)
+    id_service = models.ForeignKey(to=Service, on_delete=models.PROTECT)
+    time_input = models.DateTimeField(auto_now_add=True)
+    profit = models.FloatField(default=0)
 
 
 class MaterialsByOrder(Model):
@@ -37,4 +38,4 @@ class MaterialsByOrder(Model):
 
     id_order = models.ForeignKey(to=Order, on_delete=models.PROTECT)
     id_material = models.ForeignKey(to=Material, on_delete=models.PROTECT)
-    quantity = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(999)])
