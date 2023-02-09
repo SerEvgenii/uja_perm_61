@@ -31,6 +31,14 @@ class OrderView(CreateModelMixin,
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
+    def get_queryset(self):
+        profit = self.request.query_params
+        # queryset = Order.objects.filter(profit__gt=profit)
+        # queryset = Order.objects.filter(profit__lt=profit)
+        print(self.request.query_params)
+        queryset = Order.objects.all()
+        return queryset
+
     def post(self, request, *args, **kwargs):
         serializer = OrderSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -40,7 +48,7 @@ class OrderView(CreateModelMixin,
         client = User.objects.filter(id=serializer.data["id_client"]).first()
         service = Service.objects.filter(id=serializer.data["id_service"]).first()
 
-        if employee and client and service is None:
+        if order and employee and client and service is None:
             raise InvalidData
 
         order.id_employee = employee
@@ -48,35 +56,16 @@ class OrderView(CreateModelMixin,
         order.id_service = service
         order.profit = service.price
 
-        materials_by_order_update = set()
+        MaterialsByOrder.objects.filter(id_order=order).delete()
 
-        result = {}
+        dict_materials = {}
         for obj in request.data["materials_by_order"]:
             key = obj['id_material']
-            if result.get(key) is None:
-                result[key] = obj['quantity']
-                material = Material.objects.filter(id=obj["id_material"]).first()
-                materials_by_order = MaterialsByOrder.objects.filter(id_order=order, id_material=material).first()
-                if materials_by_order:
-                    materials_by_order.quantity = obj["quantity"]
-                    order.profit -= material.price * int(obj["quantity"])
-                    materials_by_order_update.add(materials_by_order)
-                else:
-                    materials_by_order = MaterialsByOrder.objects.create(
-                        id_order=order,
-                        id_material=material,
-                        quantity=obj["quantity"]
-                    )
-                    order.profit -= material.price * int(obj["quantity"])
-                    materials_by_order_update.add(materials_by_order)
-
-        materials_by_order_all = set(MaterialsByOrder.objects.filter(id_order=order))
-
-        delta = materials_by_order_all - materials_by_order_update
-
-        while delta:
-            obj = delta.pop()
-            MaterialsByOrder.objects.filter(id=obj.pk).delete()
+            if dict_materials.get(key) is None:
+                dict_materials[key] = obj['quantity']
+                material = Material.objects.filter(id=key).first()
+                MaterialsByOrder.objects.create(id_order=order, id_material=material, quantity=obj["quantity"])
+                order.profit -= material.price * int(obj["quantity"])
 
         order.save()
         return Response(model_to_dict(order))

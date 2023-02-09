@@ -51,12 +51,12 @@ class OrderSerializer(Serializer):
         except IntegrityError:
             raise InvalidData
 
-        result = {}
+        dict_materials = {}
         order.profit = service.price
         for obj in validated_data["materials_by_order"]:
             key = obj['id_material']
-            if result.get(key) is None:
-                result[key] = obj['quantity']
+            if dict_materials.get(key) is None:
+                dict_materials[key] = obj['quantity']
                 MaterialsByOrder.objects.create(id_order=order, **obj)
                 order.profit -= obj["id_material"].price * obj["quantity"]
 

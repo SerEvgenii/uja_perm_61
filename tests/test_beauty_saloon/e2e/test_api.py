@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from rest_framework.test import APIClient
 
-from src.core.models import MaterialsByOrder, Order
+from src.core.models import MaterialsByOrder
 
 
 class ViewTestCase(TestCase):
@@ -45,7 +45,7 @@ class ViewTestCase(TestCase):
                 },
                 {
                     "id_material": "3",
-                    "quantity": "2"
+                    "quantity": "4"
                 }
             ]
         }
@@ -77,8 +77,12 @@ class ViewTestCase(TestCase):
                 }
             ]
         }
-        response = self.client.post("/api/v1/salon/order/1/", data=data, format='json')
+        response = self.client.post("/api/v1/salon/order/2/", data=data, format='json')
         response_data = response.json()
         self.assertEqual(response_data["profit"], 1060)
+
+    def test_order_query_params(self):
+        response = self.client.get("/api/v1/salon/order/?profit>1000")
+        response_data = response.json()
 
 
