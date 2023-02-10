@@ -82,7 +82,15 @@ class ViewTestCase(TestCase):
         self.assertEqual(response_data["profit"], 1060)
 
     def test_order_query_params(self):
-        response = self.client.get("/api/v1/salon/order/?profit>1000")
-        response_data = response.json()
+        response = self.client.get("/api/v1/salon/order/?profit>=1000")
+        # response_data = response.json()
+        # print(response_data)
+        response = self.client.get("/api/v1/salon/order/?profit<1000")
+        # response_data = response.json()
+        # print(response_data)
 
+    def test_orders_of_user(self):
+        response = self.client.get("/api/v1/salon/orders-of-user/")
+        # response_data = response.json()
+        # print(response_data)
 

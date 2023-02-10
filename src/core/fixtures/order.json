@@ -20,5 +20,16 @@
             "time_input": "2023-02-07 12:55:39.776132 +00:00",
             "profit": "430"
         }
+    },
+    {
+        "model": "core.order",
+        "pk": 3,
+        "fields": {
+            "id_employee": "1",
+            "id_client": "2",
+            "id_service": "2",
+            "time_input": "2023-02-07 12:58:39.776132 +00:00",
+            "profit": "880"
+        }
     }
 ]

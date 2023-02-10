@@ -62,3 +62,9 @@ class OrderSerializer(Serializer):
 
         order.save()
         return order
+
+
+class OrdersOfUserSerializer(ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ("id", "id_client")

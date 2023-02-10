@@ -2,11 +2,12 @@ from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, ListModelMixin
 from rest_framework.response import Response
 from django.forms import model_to_dict
+from rest_framework.views import APIView
 
-from src.beauty_saloon.common.exceptions import InvalidData
+from src.beauty_saloon.common.exceptions import InvalidData, InvalidQuery
 from src.core.models import DistributionUsersByCategory, Service, Material, Order, User, MaterialsByOrder
 from src.beauty_saloon.domain_layer.serializers import DistributionUsersByCategorySerializer, \
-    ServiceSerializer, MaterialSerializer, OrderSerializer
+    ServiceSerializer, MaterialSerializer, OrderSerializer, OrdersOfUserSerializer
 
 
 class DistributionUsersByCategoryView(ModelViewSet):
@@ -32,12 +33,21 @@ class OrderView(CreateModelMixin,
     serializer_class = OrderSerializer
 
     def get_queryset(self):
-        profit = self.request.query_params
-        # queryset = Order.objects.filter(profit__gt=profit)
-        # queryset = Order.objects.filter(profit__lt=profit)
-        print(self.request.query_params)
-        queryset = Order.objects.all()
-        return queryset
+        query = self.request.query_params.urlencode()
+        if query.count("%3E=") and query.count("profit") == 1:
+            try:
+                query = query.replace("=", "")
+                profit = int(query.split("%3E")[1])
+            except ValueError:
+                raise InvalidQuery
+            return Order.objects.filter(profit__gte=profit)
+        if query.count("%3C") and query.count("profit") == 1:
+            try:
+                query = query.replace("=", "")
+                profit = int(query.split("%3C")[1])
+            except ValueError:
+                raise InvalidQuery
+            return Order.objects.filter(profit__lt=profit)
 
     def post(self, request, *args, **kwargs):
         serializer = OrderSerializer(data=request.data)
@@ -69,3 +79,14 @@ class OrderView(CreateModelMixin,
 
         order.save()
         return Response(model_to_dict(order))
+
+
+class OrdersOfUserView(APIView):
+    def get(self, request):
+        orders = Order.objects.all()
+        serializer = OrdersOfUserSerializer(data=orders, many=True)
+        serializer.is_valid()
+        for obj in serializer.data:
+            print(obj)
+
+        return Response(serializer.data)
