@@ -68,3 +68,21 @@ class OrdersOfUserSerializer(ModelSerializer):
     class Meta:
         model = Order
         fields = ("id", "id_client")
+
+
+class ProfitOfOrderSerializer(ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ("id", "profit")
+
+
+class TopEmployeeSerializer(ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ("id_employee", "profit")
+
+
+class OrdersPerMonthSerializer(ModelSerializer):
+    class Meta:
+        model = Order
+        fields = "__all__"

@@ -94,3 +94,17 @@ class ViewTestCase(TestCase):
         # response_data = response.json()
         # print(response_data)
 
+    def test_profit_of_order(self):
+        response = self.client.get("/api/v1/salon/profit-of-order/")
+        # response_data = response.json()
+        # print(response_data)
+
+    def test_top_employee(self):
+        response = self.client.get("/api/v1/salon/top-employee/")
+        # response_data = response.json()
+        # print(response_data)
+
+    def test_orders_per_month(self):
+        response = self.client.get("/api/v1/salon/order-per-month/")
+        response_data = response.json()
+        print(response_data)

@@ -46,5 +46,41 @@
             "login": "sergeev",
             "password": "94a0077ab8fdc661baeae04dfb6d38e31a429f16f708d954e9bcf20060d7d2ee"
         }
+    },
+    {
+        "model": "core.user",
+        "pk": 5,
+        "fields": {
+            "first_name": "Александр",
+            "last_name": "Александров",
+            "patronymic": "Александрович",
+            "email": "alexandrov@mail.ru",
+            "login": "alexandrov",
+            "password": "94a0077ab8fdc661baeae04dfb6d38e31a429f16f708d954e9bcf20060d7d2ee"
+        }
+    },
+    {
+        "model": "core.user",
+        "pk": 6,
+        "fields": {
+            "first_name": "Павел",
+            "last_name": "Павлов",
+            "patronymic": "Павлович",
+            "email": "pavlov@mail.ru",
+            "login": "pavlov",
+            "password": "94a0077ab8fdc661baeae04dfb6d38e31a429f16f708d954e9bcf20060d7d2ee"
+        }
+    },
+    {
+        "model": "core.user",
+        "pk": 7,
+        "fields": {
+            "first_name": " Даниил",
+            "last_name": "Данилов",
+            "patronymic": "Данилович",
+            "email": "danilov@mail.ru",
+            "login": "danilov",
+            "password": "94a0077ab8fdc661baeae04dfb6d38e31a429f16f708d954e9bcf20060d7d2ee"
+        }
     }
 ]

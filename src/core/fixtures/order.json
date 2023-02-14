@@ -3,33 +3,77 @@
         "model": "core.order",
         "pk": 1,
         "fields": {
-            "id_employee": "1",
-            "id_client": "2",
+            "id_employee": "5",
+            "id_client": "6",
             "id_service": "1",
             "time_input": "2023-02-07 12:50:39.776132+00:00",
-            "profit": "1030"
+            "profit": "1110"
         }
     },
     {
         "model": "core.order",
         "pk": 2,
         "fields": {
-            "id_employee": "1",
+            "id_employee": "4",
             "id_client": "3",
-            "id_service": "1",
+            "id_service": "2",
             "time_input": "2023-02-07 12:55:39.776132 +00:00",
-            "profit": "430"
+            "profit": "870"
         }
     },
     {
         "model": "core.order",
         "pk": 3,
         "fields": {
-            "id_employee": "1",
-            "id_client": "2",
-            "id_service": "2",
+            "id_employee": "4",
+            "id_client": "6",
+            "id_service": "3",
             "time_input": "2023-02-07 12:58:39.776132 +00:00",
-            "profit": "880"
+            "profit": "350"
+        }
+    },
+    {
+        "model": "core.order",
+        "pk": 4,
+        "fields": {
+            "id_employee": "2",
+            "id_client": "1",
+            "id_service": "4",
+            "time_input": "2023-02-07 13:58:39.776132 +00:00",
+            "profit": "1640"
+        }
+    },
+    {
+        "model": "core.order",
+        "pk": 5,
+        "fields": {
+            "id_employee": "3",
+            "id_client": "7",
+            "id_service": "2",
+            "time_input": "2022-02-07 12:58:39.776132 +00:00",
+            "profit": "1025"
+        }
+    },
+    {
+        "model": "core.order",
+        "pk": 6,
+        "fields": {
+            "id_employee": "4",
+            "id_client": "6",
+            "id_service": "5",
+            "time_input": "2022-12-07 12:58:39.776132 +00:00",
+            "profit": "1680"
+        }
+    },
+    {
+        "model": "core.order",
+        "pk": 7,
+        "fields": {
+            "id_employee": "3",
+            "id_client": "1",
+            "id_service": "4",
+            "time_input": "2022-02-07 12:58:39.776132 +00:00",
+            "profit": "1390"
         }
     }
 ]

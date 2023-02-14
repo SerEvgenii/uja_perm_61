@@ -16,5 +16,95 @@
             "id_material": "3",
             "quantity": "2"
         }
+    },
+    {
+        "model": "core.materialsbyorder",
+        "pk": 3,
+        "fields": {
+            "id_order": "2",
+            "id_material": "1",
+            "quantity": "1"
+        }
+    },
+    {
+        "model": "core.materialsbyorder",
+        "pk": 4,
+        "fields": {
+            "id_order": "3",
+            "id_material": "6",
+            "quantity": "1"
+        }
+    },
+    {
+        "model": "core.materialsbyorder",
+        "pk": 5,
+        "fields": {
+            "id_order": "4",
+            "id_material": "7",
+            "quantity": "2"
+        }
+    },
+    {
+        "model": "core.materialsbyorder",
+        "pk": 6,
+        "fields": {
+            "id_order": "5",
+            "id_material": "4",
+            "quantity": "1"
+        }
+    },
+    {
+        "model": "core.materialsbyorder",
+        "pk": 7,
+        "fields": {
+            "id_order": "5",
+            "id_material": "2",
+            "quantity": "2"
+        }
+    },
+    {
+        "model": "core.materialsbyorder",
+        "pk": 8,
+        "fields": {
+            "id_order": "6",
+            "id_material": "6",
+            "quantity": "2"
+        }
+    },
+    {
+        "model": "core.materialsbyorder",
+        "pk": 9,
+        "fields": {
+            "id_order": "6",
+            "id_material": "2",
+            "quantity": "6"
+        }
+    },
+    {
+        "model": "core.materialsbyorder",
+        "pk": 10,
+        "fields": {
+            "id_order": "7",
+            "id_material": "5",
+            "quantity": "1"
+        }
+    },
+    {
+        "model": "core.materialsbyorder",
+        "pk": 11,
+        "fields": {
+            "id_order": "7",
+            "id_material": "7",
+            "quantity": "3"
+        }
+    },
+    {
+        "model": "core.materialsbyorder",
+        "pk": 12,
+        "fields": {
+            "id_order": "7",
+            "id_material": "2",
+            "quantity": "4"
+        }
     }
 ]

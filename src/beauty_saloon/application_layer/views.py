@@ -1,3 +1,6 @@
+import json
+from datetime import datetime, timedelta
+
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, ListModelMixin
 from rest_framework.response import Response
@@ -7,7 +10,8 @@ from rest_framework.views import APIView
 from src.beauty_saloon.common.exceptions import InvalidData, InvalidQuery
 from src.core.models import DistributionUsersByCategory, Service, Material, Order, User, MaterialsByOrder
 from src.beauty_saloon.domain_layer.serializers import DistributionUsersByCategorySerializer, \
-    ServiceSerializer, MaterialSerializer, OrderSerializer, OrdersOfUserSerializer
+    ServiceSerializer, MaterialSerializer, OrderSerializer, OrdersOfUserSerializer, ProfitOfOrderSerializer, \
+    TopEmployeeSerializer, OrdersPerMonthSerializer
 
 
 class DistributionUsersByCategoryView(ModelViewSet):
@@ -34,14 +38,13 @@ class OrderView(CreateModelMixin,
 
     def get_queryset(self):
         query = self.request.query_params.urlencode()
-        if query.count("%3E=") and query.count("profit") == 1:
+        if query.count("profit%3E=") == 1:
             try:
-                query = query.replace("=", "")
-                profit = int(query.split("%3E")[1])
+                profit = int(query.split("%3E=")[1])
             except ValueError:
                 raise InvalidQuery
             return Order.objects.filter(profit__gte=profit)
-        if query.count("%3C") and query.count("profit") == 1:
+        if query.count("profit%3C") == 1:
             try:
                 query = query.replace("=", "")
                 profit = int(query.split("%3C")[1])
@@ -86,7 +89,73 @@ class OrdersOfUserView(APIView):
         orders = Order.objects.all()
         serializer = OrdersOfUserSerializer(data=orders, many=True)
         serializer.is_valid()
+
+        dict_orders_of_user = {}
         for obj in serializer.data:
-            print(obj)
+            key = obj['id_client']
+            if dict_orders_of_user.get(key) is None:
+                dict_orders_of_user[key] = [obj['id']]
+            else:
+                dict_orders_of_user[key].append(obj['id'])
+
+        return Response(dict_orders_of_user)
+
+
+class ProfitOfOrderView(APIView):
+    def get(self, request):
+        orders = Order.objects.all()
+        serializer = ProfitOfOrderSerializer(data=orders, many=True)
+        serializer.is_valid()
+
+        list_profit_of_order = []
+        for obj in serializer.data:
+            if obj['profit'] > 1000:
+                obj['profit>=1000'] = obj.pop('profit')
+                list_profit_of_order.append(obj)
+            else:
+                obj['profit<1000'] = obj.pop('profit')
+                list_profit_of_order.append(obj)
+
+        return Response(list_profit_of_order)
+
+
+class TopEmployeeView(APIView):
+    def get(self, request):
+        orders = Order.objects.all()
+        serializer = TopEmployeeSerializer(data=orders, many=True)
+        serializer.is_valid()
+
+        dict_employee = {}
+        for obj in serializer.data:
+            key = obj['id_employee']
+            if dict_employee.get(key) is None:
+                dict_employee[key] = obj['profit']
+            else:
+                dict_employee[key] += obj['profit']
+
+        dict_employee = sorted(dict_employee.items(), key=lambda x: x[1], reverse=True)
+        sorted_dict = dict(dict_employee)
+
+        list_top = list()
+        for key, value in sorted_dict.items():
+            list_top.append({key: value})
+        return Response(list_top[:3])
+
+
+class OrdersPerMonthView(APIView):
+    def get(self, request):
+        time = datetime.now() - timedelta(days=90)
+        orders = Order.objects.filter(time_input__gt=time, profit__gt=1000)
+        list_orders = list()
+        for order in orders:
+            materials_by_order = MaterialsByOrder.objects.filter(id_order=order.pk)
+            price = 0
+            for obj in materials_by_order:
+                price += obj.id_material.price * obj.quantity
+            if price < 500:
+                list_orders.append(order)
+
+        serializer = OrdersPerMonthSerializer(data=list_orders, many=True)
+        serializer.is_valid()
 
         return Response(serializer.data)
