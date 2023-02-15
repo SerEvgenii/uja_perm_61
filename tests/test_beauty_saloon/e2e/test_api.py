@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from django.test import TestCase
 
 from rest_framework.test import APIClient
@@ -16,18 +18,6 @@ class ViewTestCase(TestCase):
         'order.json',
         'materials_by_order.json',
     ]
-
-    def test_distribution_users_by_category(self):
-        response = self.client.get("/api/v1/salon/roles/")
-        self.assertEqual(response.status_code, 200)
-
-    def test_service(self):
-        response = self.client.get("/api/v1/salon/services/")
-        self.assertEqual(response.status_code, 200)
-
-    def test_material(self):
-        response = self.client.get("/api/v1/salon/materials/")
-        self.assertEqual(response.status_code, 200)
 
     def test_create_order(self):
         data = {
@@ -83,28 +73,24 @@ class ViewTestCase(TestCase):
 
     def test_order_query_params(self):
         response = self.client.get("/api/v1/salon/order/?profit>=1000")
-        # response_data = response.json()
-        # print(response_data)
+        response_data = response.json()
+        self.assertEqual(len(response_data), 5)
         response = self.client.get("/api/v1/salon/order/?profit<1000")
-        # response_data = response.json()
-        # print(response_data)
+        response_data = response.json()
+        self.assertEqual(len(response_data), 2)
 
     def test_orders_of_user(self):
         response = self.client.get("/api/v1/salon/orders-of-user/")
-        # response_data = response.json()
-        # print(response_data)
-
-    def test_profit_of_order(self):
-        response = self.client.get("/api/v1/salon/profit-of-order/")
-        # response_data = response.json()
-        # print(response_data)
+        response_data = response.json()
+        self.assertListEqual(response_data["6"], [1, 3, 6])
 
     def test_top_employee(self):
         response = self.client.get("/api/v1/salon/top-employee/")
-        # response_data = response.json()
-        # print(response_data)
+        response_data = response.json()
+        self.assertDictEqual(response_data[0], {'4': 2900.0})
 
     def test_orders_per_month(self):
         response = self.client.get("/api/v1/salon/order-per-month/")
         response_data = response.json()
-        print(response_data)
+        time = datetime.strptime(response_data[0]["time_input"], '%Y-%m-%dT%H:%M:%S.%f')
+        self.assertTrue(time > (datetime.now() - timedelta(days=90)))

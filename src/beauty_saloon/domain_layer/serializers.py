@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer, Serializer
+from rest_framework.serializers import ModelSerializer, Serializer, ValidationError
 from rest_framework.fields import CharField, FloatField, ListField
 from django.db.utils import IntegrityError
 
@@ -38,21 +38,17 @@ class OrderSerializer(Serializer):
     profit = FloatField(default=0)
 
     def create(self, validated_data):
-        employee = User.objects.filter(id=validated_data["id_employee"]).first()
-        client = User.objects.filter(id=validated_data["id_client"]).first()
-        service = Service.objects.filter(id=validated_data["id_service"]).first()
-
         try:
             order = Order.objects.create(
-                id_employee=employee,
-                id_client=client,
-                id_service=service
+                id_employee=User.objects.filter(id=validated_data["id_employee"]).first(),
+                id_client=User.objects.filter(id=validated_data["id_client"]).first(),
+                id_service=Service.objects.filter(id=validated_data["id_service"]).first(),
+                profit=Service.objects.filter(id=validated_data["id_service"]).first().price
             )
         except IntegrityError:
-            raise InvalidData
+            raise InvalidData("Invalid data")
 
         dict_materials = {}
-        order.profit = service.price
         for obj in validated_data["materials_by_order"]:
             key = obj['id_material']
             if dict_materials.get(key) is None:

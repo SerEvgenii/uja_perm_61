@@ -1,4 +1,3 @@
-import json
 from datetime import datetime, timedelta
 
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
@@ -61,8 +60,8 @@ class OrderView(CreateModelMixin,
         client = User.objects.filter(id=serializer.data["id_client"]).first()
         service = Service.objects.filter(id=serializer.data["id_service"]).first()
 
-        if order and employee and client and service is None:
-            raise InvalidData
+        if (order and employee and client and service) is None:
+            raise InvalidData("Invalid data")
 
         order.id_employee = employee
         order.id_client = client
@@ -72,14 +71,12 @@ class OrderView(CreateModelMixin,
         MaterialsByOrder.objects.filter(id_order=order).delete()
 
         dict_materials = {}
-        for obj in request.data["materials_by_order"]:
-            key = obj['id_material']
-            if dict_materials.get(key) is None:
-                dict_materials[key] = obj['quantity']
-                material = Material.objects.filter(id=key).first()
+        for obj in serializer.validated_data["materials_by_order"]:
+            material = obj["id_material"]
+            if dict_materials.get(material) is None:
+                dict_materials[material] = obj["quantity"]
                 MaterialsByOrder.objects.create(id_order=order, id_material=material, quantity=obj["quantity"])
-                order.profit -= material.price * int(obj["quantity"])
-
+                order.profit -= material.price * obj["quantity"]
         order.save()
         return Response(model_to_dict(order))
 
@@ -92,31 +89,19 @@ class OrdersOfUserView(APIView):
 
         dict_orders_of_user = {}
         for obj in serializer.data:
-            key = obj['id_client']
+            key = obj["id_client"]
             if dict_orders_of_user.get(key) is None:
-                dict_orders_of_user[key] = [obj['id']]
+                dict_orders_of_user[key] = [obj["id"]]
             else:
-                dict_orders_of_user[key].append(obj['id'])
+                dict_orders_of_user[key].append(obj["id"])
 
         return Response(dict_orders_of_user)
 
 
-class ProfitOfOrderView(APIView):
-    def get(self, request):
-        orders = Order.objects.all()
-        serializer = ProfitOfOrderSerializer(data=orders, many=True)
-        serializer.is_valid()
-
-        list_profit_of_order = []
-        for obj in serializer.data:
-            if obj['profit'] > 1000:
-                obj['profit>=1000'] = obj.pop('profit')
-                list_profit_of_order.append(obj)
-            else:
-                obj['profit<1000'] = obj.pop('profit')
-                list_profit_of_order.append(obj)
-
-        return Response(list_profit_of_order)
+class ProfitOfOrderView(ListModelMixin,
+                        GenericViewSet):
+    queryset = Order.objects.all()
+    serializer_class = ProfitOfOrderSerializer
 
 
 class TopEmployeeView(APIView):
@@ -127,25 +112,24 @@ class TopEmployeeView(APIView):
 
         dict_employee = {}
         for obj in serializer.data:
-            key = obj['id_employee']
+            key = obj["id_employee"]
             if dict_employee.get(key) is None:
-                dict_employee[key] = obj['profit']
+                dict_employee[key] = obj["profit"]
             else:
-                dict_employee[key] += obj['profit']
+                dict_employee[key] += obj["profit"]
 
         dict_employee = sorted(dict_employee.items(), key=lambda x: x[1], reverse=True)
-        sorted_dict = dict(dict_employee)
 
         list_top = list()
-        for key, value in sorted_dict.items():
+        for key, value in dict_employee:
             list_top.append({key: value})
         return Response(list_top[:3])
 
 
 class OrdersPerMonthView(APIView):
     def get(self, request):
-        time = datetime.now() - timedelta(days=90)
-        orders = Order.objects.filter(time_input__gt=time, profit__gt=1000)
+        time_limit = datetime.now() - timedelta(days=90)
+        orders = Order.objects.filter(time_input__gt=time_limit, profit__gt=1000)
         list_orders = list()
         for order in orders:
             materials_by_order = MaterialsByOrder.objects.filter(id_order=order.pk)

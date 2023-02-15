@@ -9,10 +9,10 @@ router.register(r'roles', DistributionUsersByCategoryView, basename="roles")
 router.register(r'services', ServiceView, basename="services")
 router.register(r'materials', MaterialView, basename="materials")
 router.register(r'order', OrderView, basename="order")
+router.register(r'profit-of-order', ProfitOfOrderView, basename="profit_of_order")
 
 urlpatterns = [
     path('orders-of-user/', OrdersOfUserView.as_view(), name='orders_of_user'),
-    path('profit-of-order/', ProfitOfOrderView.as_view(), name='profit_of_order'),
     path('top-employee/', TopEmployeeView.as_view(), name='top_employee'),
     path('order-per-month/', OrdersPerMonthView.as_view(), name='order_per_month'),
 ]
